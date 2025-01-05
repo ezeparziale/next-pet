@@ -1,7 +1,6 @@
 import CommandMenu from "@/components/command-menu";
 import Pet from "@/components/pet";
 import { Badge } from "@/components/ui/badge";
-import { Github } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -11,7 +10,7 @@ export default function Home() {
         Virtual Pet Simulator
         <Badge className="ml-2">beta</Badge>
         <Link
-          href="https://github.com/yourusername/your-repo-name"
+          href="https://github.com/ezeparziale/next-pet"
           target="_blank"
           rel="noopener noreferrer"
         >
