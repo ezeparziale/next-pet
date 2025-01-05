@@ -355,7 +355,7 @@ export default function Pet() {
   if (!isMounted) return <PetSkeleton />;
 
   return (
-    <div className="p-4 border rounded-md" style={{ maxWidth: "420px" }}>
+    <div className="p-4 border rounded-md" style={{ maxWidth: "460px" }}>
       <div className="flex justify-between items-center mb-4">
         {isEditingName ? (
           <div className="flex items-center">
