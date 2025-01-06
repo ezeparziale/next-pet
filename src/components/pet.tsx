@@ -492,69 +492,53 @@ export default function Pet() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-1">
-        <div className="flex space-x-0.5">
-          <Button onClick={handleFeedHamburger} disabled={isDead || isInAction}>
-            🍔
-          </Button>
-          <Button onClick={handleFeedIceCream} disabled={isDead || isInAction}>
-            🍦
-          </Button>
-          <Button onClick={handleFeedApple} disabled={isDead || isInAction}>
-            🍎
-          </Button>
-          <Button onClick={handleFeedCarrot} disabled={isDead || isInAction}>
-            🥕
-          </Button>
-        </div>
-        <div className="flex space-x-0.5">
-          <Button
-            onClick={handleFeedChickenLeg}
-            disabled={isDead || isInAction}
-          >
-            🍗
-          </Button>
-          <Button onClick={handleFeedNoodle} disabled={isDead || isInAction}>
-            🍝
-          </Button>
-          <Button onClick={handleFeedWater} disabled={isDead || isInAction}>
-            💧
-          </Button>
-          <Button onClick={play} disabled={isDead || isInAction}>
-            ⚽
-          </Button>
-        </div>
-        <div className="flex space-x-0.5">
-          <Button onClick={rest} disabled={isDead || isInAction}>
-            🛌
-          </Button>
-          <Button onClick={handleMedicine} disabled={isDead || isInAction}>
-            💊
-          </Button>
-          <Button onClick={handleShower} disabled={isDead || isInAction}>
-            🚿
-          </Button>
-          <Button
-            onClick={toggleAirConditioner}
-            disabled={isDead || isInAction}
-          >
-            🌬️
-          </Button>
-        </div>
-        <div className="flex space-x-0.5">
-          <Button onClick={handleStudy} disabled={isDead || isInAction}>
-            📖
-          </Button>
-          <Button onClick={handleDiscipline} disabled={isDead || isInAction}>
-            💗
-          </Button>
-          <Button onClick={toggleLight} disabled={isDead || isInAction}>
-            💡
-          </Button>
-        </div>
-        <div className="flex space-x-0.5">
-          {isDead && <Button onClick={handleReset}>🔄</Button>}
-        </div>
+      <div className="grid grid-cols-8 gap-0.5">
+        <Button onClick={handleFeedHamburger} disabled={isDead || isInAction}>
+          🍔
+        </Button>
+        <Button onClick={handleFeedIceCream} disabled={isDead || isInAction}>
+          🍦
+        </Button>
+        <Button onClick={handleFeedApple} disabled={isDead || isInAction}>
+          🍎
+        </Button>
+        <Button onClick={handleFeedCarrot} disabled={isDead || isInAction}>
+          🥕
+        </Button>
+        <Button onClick={handleFeedChickenLeg} disabled={isDead || isInAction}>
+          🍗
+        </Button>
+        <Button onClick={handleFeedNoodle} disabled={isDead || isInAction}>
+          🍝
+        </Button>
+        <Button onClick={handleFeedWater} disabled={isDead || isInAction}>
+          💧
+        </Button>
+        <Button onClick={play} disabled={isDead || isInAction}>
+          ⚽
+        </Button>
+        <Button onClick={rest} disabled={isDead || isInAction}>
+          🛌
+        </Button>
+        <Button onClick={handleMedicine} disabled={isDead || isInAction}>
+          💊
+        </Button>
+        <Button onClick={handleShower} disabled={isDead || isInAction}>
+          🚿
+        </Button>
+        <Button onClick={toggleAirConditioner} disabled={isDead || isInAction}>
+          🌬️
+        </Button>
+        <Button onClick={handleStudy} disabled={isDead || isInAction}>
+          📖
+        </Button>
+        <Button onClick={handleDiscipline} disabled={isDead || isInAction}>
+          💗
+        </Button>
+        <Button onClick={toggleLight} disabled={isDead || isInAction}>
+          💡
+        </Button>
+        {isDead && <Button onClick={handleReset}>🔄</Button>}
       </div>
       <div className="mt-4 text-center">
         <span className="text-sm">
