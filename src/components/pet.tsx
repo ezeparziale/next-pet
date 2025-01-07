@@ -168,47 +168,71 @@ export default function Pet() {
 
   const handleFeedHamburger = () => {
     setIsInAction(true);
-    feedHamburger();
     setFrame(0);
-    setPetState("eating_hamburger");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (hunger === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 6000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedHamburger();
+      setPetState("eating_hamburger");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 6000);
+    }
   };
 
   const handleFeedCarrot = () => {
     setIsInAction(true);
-    feedCarrot();
     setFrame(0);
-    setPetState("eating_carrot");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (hunger === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 6000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedCarrot();
+      setPetState("eating_carrot");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 6000);
+    }
   };
 
   const handleFeedChickenLeg = () => {
     setIsInAction(true);
-    feedChickenLeg();
     setFrame(0);
-    setPetState("eating_chicken_leg");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (hunger === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 7000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedChickenLeg();
+      setPetState("eating_chicken_leg");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 7000);
+    }
   };
 
   const handleMedicine = () => {
@@ -256,47 +280,71 @@ export default function Pet() {
 
   const handleFeedNoodle = () => {
     setIsInAction(true);
-    feedNoodle();
     setFrame(0);
-    setPetState("eating_noodle");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (hunger === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 9000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedNoodle();
+      setPetState("eating_noodle");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 9000);
+    }
   };
 
   const handleFeedWater = () => {
     setIsInAction(true);
-    feedWater();
     setFrame(0);
-    setPetState("drinking_water");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (thirst === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 10000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedWater();
+      setPetState("drinking_water");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 10000);
+    }
   };
 
   const handleFeedApple = () => {
     setIsInAction(true);
-    feedApple();
     setFrame(0);
-    setPetState("eating_apple");
-    setTimeout(() => {
-      if (isDirty) {
-        setPetState("baby_dirty");
-      } else {
+    if (hunger === 0) {
+      setPetState("no");
+      setTimeout(() => {
         setPetState("baby_1");
-      }
-      setIsInAction(false);
-    }, 6000);
+        setIsInAction(false);
+      }, 3000);
+    } else {
+      feedApple();
+      setPetState("eating_apple");
+      setTimeout(() => {
+        if (isDirty) {
+          setPetState("baby_dirty");
+        } else {
+          setPetState("baby_1");
+        }
+        setIsInAction(false);
+      }, 6000);
+    }
   };
 
   const handleShower = () => {
