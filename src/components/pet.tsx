@@ -352,6 +352,15 @@ export default function Pet() {
     }, 1000);
   };
 
+  const handleAirConditioner = () => {
+    setIsInAction(true);
+    toggleAirConditioner();
+    setFrame(0);
+    updateStatsTemp();
+    updatePetState();
+    setIsInAction(false);
+  };
+
   if (!isMounted) return <PetSkeleton />;
 
   return (
@@ -526,7 +535,7 @@ export default function Pet() {
         <Button onClick={handleShower} disabled={isDead || isInAction}>
           🚿
         </Button>
-        <Button onClick={toggleAirConditioner} disabled={isDead || isInAction}>
+        <Button onClick={handleAirConditioner} disabled={isDead || isInAction}>
           🌬️
         </Button>
         <Button onClick={handleStudy} disabled={isDead || isInAction}>
