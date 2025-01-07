@@ -226,7 +226,8 @@ const usePetStore = create<PetState>()(
 
           const newAge = state.birthDate
             ? Math.floor(
-                (new Date().getTime() - new Date(state.birthDate).getTime()) /
+                (new Date().setHours(0, 0, 0, 0) -
+                  new Date(state.birthDate).setHours(0, 0, 0, 0)) /
                   (1000 * 60 * 60 * 24)
               )
             : state.age;
