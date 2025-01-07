@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="font-mono flex flex-col justify-center items-center min-h-screen">
-      <h1 className="text-4xl font-bold mb-8 flex items-center space-x-2">
+      <h1 className="text-4xl font-bold mb-8 flex items-center px-4 space-x-2 sm:pt-2">
         Virtual Pet Simulator
         <Badge className="ml-2">beta</Badge>
         <Link
