@@ -68,6 +68,8 @@ export default function Pet() {
   const updatePetState = useCallback(() => {
     if (isDead) {
       setPetState("dead");
+    } else if (isBedtime) {
+      setPetState("sleeping");
     } else if (isSick && petState != "give_medicine") {
       setPetState("sick_1");
     } else if (isCold) {
@@ -76,8 +78,6 @@ export default function Pet() {
       setPetState("angry");
     } else if (isDirty && petState != "baby_shower") {
       setPetState("baby_dirty");
-    } else if (isBedtime) {
-      setPetState("sleeping");
     }
   }, [isDead, isSick, petState, isCold, isHot, isDirty, isBedtime]);
 

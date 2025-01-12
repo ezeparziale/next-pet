@@ -186,6 +186,8 @@ const usePetStore = create<PetState>()(
 
       decreaseStats: () =>
         set((state) => {
+          state.updateBedtime();
+
           if (state.isDead) return state;
 
           const shouldDecreaseDiscipline = Math.random() < 0.5; // 50% chance to decrease discipline
@@ -195,22 +197,31 @@ const usePetStore = create<PetState>()(
               ? DISCIPLINE_ORDER[currentIndex - 1]
               : state.discipline;
 
-          const hungerIncrease = state.isSick ? 10 : 5;
-          const happinessDecrease = state.isSick ? 10 : 5;
-          const energyDecrease = state.isSick ? 15 : 5;
-          const thirstIncrease = state.isSick ? 10 : 5;
-          let healthDecrease = state.isSick ? 20 : 10;
-          let happinessDecrease = state.isSick ? 10 : 5;
+          // Adjust stat changes based on whether the pet is sick or not
+          let hungerCost = state.isSick ? 10 : 5;
+          let energyCost = state.isSick ? 15 : 5;
+          let thirstCost = state.isSick ? 10 : 5;
+          let healthCost = state.isSick ? 20 : 10;
+          let happinessCost = state.isSick ? 10 : 5;
 
           if (!state.isBedtime && !state.isLightOn) {
-            happinessDecrease += 10; // Additional happiness decrease if not bedtime and light is off
+            happinessCost += 10; // Additional happiness decrease if not bedtime and light is off
+          }
+
+          // Adjust stats if it is bedtime and the light is off
+          if (state.isBedtime && !state.isLightOn) {
+            hungerCost = 5;
+            energyCost = -5;
+            thirstCost = 5;
+            healthCost = -5;
+            happinessCost = -5;
           }
 
           if (state.isSick && state.sickSince) {
             const timeSinceSick =
               new Date().getTime() - new Date(state.sickSince).getTime();
             if (timeSinceSick > state.sickDuration) {
-              healthDecrease = 5;
+              healthCost = 5;
             }
           }
 
@@ -219,13 +230,14 @@ const usePetStore = create<PetState>()(
             Math.min(
               100,
               state.hunger >= 90 || state.happiness <= 20 || state.thirst >= 90
-                ? state.health - healthDecrease
+                ? state.health - healthCost
                 : state.health
             )
           );
 
           const shouldGetSick =
             !state.isSick &&
+            !state.isBedtime && // Prevent getting sick if it is bedtime
             (state.hunger >= 80 ||
               state.happiness <= 30 ||
               state.energy <= 20 ||
@@ -240,13 +252,14 @@ const usePetStore = create<PetState>()(
               )
             : state.age;
 
-          state.updateBedtime();
-
           return {
-            hunger: Math.min(state.hunger + hungerIncrease, 100),
-            happiness: Math.max(state.happiness - happinessDecrease, 0),
-            energy: Math.max(state.energy - energyDecrease, 0),
-            thirst: Math.min(state.thirst + thirstIncrease, 100),
+            hunger: Math.min(Math.max(state.hunger + hungerCost, 0), 100),
+            happiness: Math.min(
+              Math.max(state.happiness - happinessCost, 0),
+              100
+            ),
+            energy: Math.min(Math.max(state.energy - energyCost, 0), 100),
+            thirst: Math.min(Math.max(state.thirst + thirstCost, 0), 100),
             health: newHealth,
             isDead: newHealth === 0,
             isSick: state.isSick || shouldGetSick,
