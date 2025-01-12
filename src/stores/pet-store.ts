@@ -200,6 +200,11 @@ const usePetStore = create<PetState>()(
           const energyDecrease = state.isSick ? 15 : 5;
           const thirstIncrease = state.isSick ? 10 : 5;
           let healthDecrease = state.isSick ? 20 : 10;
+          let happinessDecrease = state.isSick ? 10 : 5;
+
+          if (!state.isBedtime && !state.isLightOn) {
+            happinessDecrease += 10; // Additional happiness decrease if not bedtime and light is off
+          }
 
           if (state.isSick && state.sickSince) {
             const timeSinceSick =
