@@ -25,6 +25,7 @@ interface PetState {
   thirst: number;
   discipline: string;
   isLightOn: boolean;
+  isBedtime: boolean;
   feedHamburger: () => void;
   feedApple: () => void;
   feedIceCream: () => void;
@@ -45,6 +46,7 @@ interface PetState {
   disciplineAction: () => void;
   toggleLight: () => void;
   updateStatsTemp: () => void;
+  updateBedtime: () => void;
 }
 
 const DISCIPLINE_ORDER = ["F", "E", "D", "C", "B", "B+", "A", "A+"];
@@ -75,6 +77,7 @@ const usePetStore = create<PetState>()(
       isHot: false,
       discipline: "E",
       isLightOn: true,
+      isBedtime: false,
 
       feedHamburger: () =>
         set((state) => {
@@ -232,6 +235,8 @@ const usePetStore = create<PetState>()(
               )
             : state.age;
 
+          state.updateBedtime();
+
           return {
             hunger: Math.min(state.hunger + hungerIncrease, 100),
             happiness: Math.max(state.happiness - happinessDecrease, 0),
@@ -287,6 +292,7 @@ const usePetStore = create<PetState>()(
           isHot: false,
           discipline: "E",
           isLightOn: true,
+          isBedtime: false,
         })),
 
       setName: (name: string) => set({ name }),
@@ -365,6 +371,13 @@ const usePetStore = create<PetState>()(
             isCold,
             isHot,
           };
+        }),
+
+      updateBedtime: () =>
+        set(() => {
+          const currentHour = new Date().getHours();
+          const isBedtime = currentHour >= 20 || currentHour < 8;
+          return { isBedtime };
         }),
     }),
     {

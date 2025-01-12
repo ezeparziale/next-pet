@@ -53,6 +53,8 @@ export default function Pet() {
     toggleLight,
     isLightOn,
     updateStatsTemp,
+    isBedtime,
+    updateBedtime,
   } = usePetStore();
 
   const [petState, setPetState] = useState<PetStates>("egg");
@@ -74,8 +76,10 @@ export default function Pet() {
       setPetState("angry");
     } else if (isDirty && petState != "baby_shower") {
       setPetState("baby_dirty");
+    } else if (isBedtime) {
+      setPetState("sleeping");
     }
-  }, [isDead, isSick, petState, isCold, isHot, isDirty]);
+  }, [isDead, isSick, petState, isCold, isHot, isDirty, isBedtime]);
 
   useEffect(() => {
     updatePetState();
@@ -95,6 +99,7 @@ export default function Pet() {
       "drinking_water",
       "studying",
       "discipline",
+      "sleeping",
     ];
 
     const isStateExcluded = excludedStates.includes(petState);
@@ -154,6 +159,14 @@ export default function Pet() {
 
     return () => clearInterval(interval);
   }, [updateStatsTemp]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateBedtime();
+    }, 60000); // Check bedtime every minute
+
+    return () => clearInterval(interval);
+  }, [updateBedtime]);
 
   const handleNameEdit = () => {
     setIsEditingName(true);
