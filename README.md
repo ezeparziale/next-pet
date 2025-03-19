@@ -9,4 +9,4 @@ Next Pet is a virtual pet application inspired by the popular digital pets from 
 - [Zustand](https://github.com/pmndrs/zustand) for state management
 - [Next.js 15](https://nextjs.org/) for the React framework
 - [shadcn/ui](https://shadcn.dev/) for UI components
-- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [Tailwind CSS v4](https://tailwindcss.com/) for styling
