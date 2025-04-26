@@ -1,13 +1,14 @@
-import CommandMenu from "@/components/command-menu";
-import Pet from "@/components/pet";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
+import Link from "next/link"
+
+import { Badge } from "@/components/ui/badge"
+import CommandMenu from "@/components/command-menu"
+import Pet from "@/components/pet"
 
 export default function Home() {
   return (
-    <div className="font-mono flex flex-col justify-center items-center min-h-screen">
-      <div className="flex flex-wrap justify-center items-center gap-2 mb-8 pt-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center font-mono">
+      <div className="mb-8 flex flex-wrap items-center justify-center gap-2 pt-2">
+        <h1 className="text-center text-2xl font-bold sm:text-3xl md:text-4xl">
           Virtual Pet Simulator
         </h1>
         <Badge>beta</Badge>
@@ -32,5 +33,5 @@ export default function Home() {
       <Pet />
       <CommandMenu />
     </div>
-  );
+  )
 }

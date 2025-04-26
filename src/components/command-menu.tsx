@@ -1,8 +1,11 @@
-"use client";
+"use client"
 
-import { useOperatingSystem } from "@/lib/hooks/use-operating-system";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react"
+import usePetStore from "@/stores/pet-store"
+import { DialogDescription } from "@radix-ui/react-dialog"
+import { RefreshCw } from "lucide-react"
 
+import { useOperatingSystem } from "@/lib/hooks/use-operating-system"
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,34 +13,32 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command";
-import { Button } from "./ui/button";
-import usePetStore from "@/stores/pet-store";
-import { RefreshCw } from "lucide-react";
-import { DialogTitle } from "./ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
+} from "@/components/ui/command"
+
+import { Button } from "./ui/button"
+import { DialogTitle } from "./ui/dialog"
 
 export default function CommandMenu() {
-  const [open, setOpen] = useState(false);
-  const { isMacOS } = useOperatingSystem();
-  const { reset } = usePetStore();
+  const [open, setOpen] = useState(false)
+  const { isMacOS } = useOperatingSystem()
+  const { reset } = usePetStore()
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
+        e.preventDefault()
+        setOpen((open) => !open)
       }
-    };
+    }
 
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
 
   const runCommand = useCallback((command: () => unknown) => {
-    setOpen(false);
-    command();
-  }, []);
+    setOpen(false)
+    command()
+  }, [])
 
   return (
     <>
@@ -46,12 +47,12 @@ export default function CommandMenu() {
         onClick={() => setOpen(true)}
         className="items-center p-1"
       >
-        <p className="space-x-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground space-x-1 text-sm">
           <span>Command menu</span>
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+          <kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
             <span className="text-xs">{isMacOS ? "⌘" : "ctrl"}</span>
           </kbd>
-          <kbd className="pointer-events-none inline-flex h-5 select-none items-center rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+          <kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
             <span className="text-xs">K</span>
           </kbd>
         </p>
@@ -64,7 +65,7 @@ export default function CommandMenu() {
           <CommandGroup heading="Actions">
             <CommandItem
               onSelect={() => {
-                runCommand(() => reset());
+                runCommand(() => reset())
               }}
             >
               <RefreshCw className="mr-2 size-4" />
@@ -75,5 +76,5 @@ export default function CommandMenu() {
         </CommandList>
       </CommandDialog>
     </>
-  );
+  )
 }

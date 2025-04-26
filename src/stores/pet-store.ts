@@ -1,55 +1,55 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 interface PetState {
-  name: string;
-  hunger: number;
-  happiness: number;
-  energy: number;
-  health: number;
-  isSick: boolean;
-  sickSince: Date | null;
-  sickDuration: number;
-  isDead: boolean;
-  level: number;
-  experience: number;
-  isAirConditionerOn: boolean;
-  ambientTemperature: number;
-  age: number;
-  birthDate: Date | null;
-  weight: number;
-  isDirty: boolean;
-  playCount: number;
-  isCold: boolean;
-  isHot: boolean;
-  thirst: number;
-  discipline: string;
-  isLightOn: boolean;
-  isBedtime: boolean;
-  feedHamburger: () => void;
-  feedApple: () => void;
-  feedIceCream: () => void;
-  feedCarrot: () => void;
-  feedNoodle: () => void;
-  feedChickenLeg: () => void;
-  feedWater: () => void;
-  play: () => void;
-  rest: () => void;
-  giveMedicine: () => void;
-  decreaseStats: () => void;
-  gainExperience: (amount: number) => void;
-  reset: () => void;
-  setName: (name: string) => void;
-  toggleAirConditioner: () => void;
-  clean: () => void;
-  study: () => void;
-  disciplineAction: () => void;
-  toggleLight: () => void;
-  updateStatsTemp: () => void;
-  updateBedtime: () => void;
+  name: string
+  hunger: number
+  happiness: number
+  energy: number
+  health: number
+  isSick: boolean
+  sickSince: Date | null
+  sickDuration: number
+  isDead: boolean
+  level: number
+  experience: number
+  isAirConditionerOn: boolean
+  ambientTemperature: number
+  age: number
+  birthDate: Date | null
+  weight: number
+  isDirty: boolean
+  playCount: number
+  isCold: boolean
+  isHot: boolean
+  thirst: number
+  discipline: string
+  isLightOn: boolean
+  isBedtime: boolean
+  feedHamburger: () => void
+  feedApple: () => void
+  feedIceCream: () => void
+  feedCarrot: () => void
+  feedNoodle: () => void
+  feedChickenLeg: () => void
+  feedWater: () => void
+  play: () => void
+  rest: () => void
+  giveMedicine: () => void
+  decreaseStats: () => void
+  gainExperience: (amount: number) => void
+  reset: () => void
+  setName: (name: string) => void
+  toggleAirConditioner: () => void
+  clean: () => void
+  study: () => void
+  disciplineAction: () => void
+  toggleLight: () => void
+  updateStatsTemp: () => void
+  updateBedtime: () => void
 }
 
-const DISCIPLINE_ORDER = ["F", "E", "D", "C", "B", "B+", "A", "A+"];
+const DISCIPLINE_ORDER = ["F", "E", "D", "C", "B", "B+", "A", "A+"]
 
 const usePetStore = create<PetState>()(
   persist(
@@ -81,96 +81,96 @@ const usePetStore = create<PetState>()(
 
       feedHamburger: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(5);
+          if (state.isSick) return state
+          state.gainExperience(5)
           return {
             hunger: Math.max(0, state.hunger - 12.5),
             weight: state.weight + 0.1,
-          };
+          }
         }),
 
       feedApple: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(2);
+          if (state.isSick) return state
+          state.gainExperience(2)
           return {
             hunger: Math.max(0, state.hunger - 5),
-          };
+          }
         }),
 
       feedIceCream: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(5);
+          if (state.isSick) return state
+          state.gainExperience(5)
           return {
             happiness: Math.min(100, state.happiness + 20),
             weight: state.weight + 0.2,
-          };
+          }
         }),
 
       feedCarrot: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(2);
+          if (state.isSick) return state
+          state.gainExperience(2)
           return {
             hunger: Math.max(0, state.hunger - 5),
-          };
+          }
         }),
 
       feedNoodle: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(2);
+          if (state.isSick) return state
+          state.gainExperience(2)
           return {
             hunger: Math.max(0, state.hunger - 10),
             weight: state.weight + 0.1,
-          };
+          }
         }),
 
       feedChickenLeg: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(5);
+          if (state.isSick) return state
+          state.gainExperience(5)
           return {
             hunger: Math.max(0, state.hunger - 15),
             weight: state.weight + 0.2,
-          };
+          }
         }),
 
       feedWater: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(2);
+          if (state.isSick) return state
+          state.gainExperience(2)
           return {
             thirst: Math.max(0, state.thirst - 20),
-          };
+          }
         }),
 
       play: () =>
         set((state) => {
           if (state.isSick) {
-            return { energy: Math.max(0, state.energy - 5) };
+            return { energy: Math.max(0, state.energy - 5) }
           }
-          const newPlayCount = state.isDirty ? 10 : state.playCount + 1;
-          const isDirty = newPlayCount === 10;
-          state.gainExperience(10);
+          const newPlayCount = state.isDirty ? 10 : state.playCount + 1
+          const isDirty = newPlayCount === 10
+          state.gainExperience(10)
           return {
             happiness: Math.min(100, state.happiness + 15),
             energy: Math.max(0, state.energy - 10),
             hunger: Math.min(100, state.hunger + 10),
             isDirty,
             playCount: newPlayCount,
-          };
+          }
         }),
 
       rest: () =>
         set((state) => {
-          if (state.isSick) return state;
-          state.gainExperience(3);
+          if (state.isSick) return state
+          state.gainExperience(3)
           return {
             energy: Math.min(100, state.energy + 30),
             happiness: Math.min(100, state.happiness + 5),
-          };
+          }
         }),
 
       giveMedicine: () =>
@@ -186,42 +186,42 @@ const usePetStore = create<PetState>()(
 
       decreaseStats: () =>
         set((state) => {
-          state.updateBedtime();
+          state.updateBedtime()
 
-          if (state.isDead) return state;
+          if (state.isDead) return state
 
-          const shouldDecreaseDiscipline = Math.random() < 0.5; // 50% chance to decrease discipline
-          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline);
+          const shouldDecreaseDiscipline = Math.random() < 0.5 // 50% chance to decrease discipline
+          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline)
           const newDiscipline =
             shouldDecreaseDiscipline && currentIndex > 0
               ? DISCIPLINE_ORDER[currentIndex - 1]
-              : state.discipline;
+              : state.discipline
 
           // Adjust stat changes based on whether the pet is sick or not
-          let hungerCost = state.isSick ? 10 : 5;
-          let energyCost = state.isSick ? 15 : 5;
-          let thirstCost = state.isSick ? 10 : 5;
-          let healthCost = state.isSick ? 20 : 10;
-          let happinessCost = state.isSick ? 10 : 5;
+          let hungerCost = state.isSick ? 10 : 5
+          let energyCost = state.isSick ? 15 : 5
+          let thirstCost = state.isSick ? 10 : 5
+          let healthCost = state.isSick ? 20 : 10
+          let happinessCost = state.isSick ? 10 : 5
 
           if (!state.isBedtime && !state.isLightOn) {
-            happinessCost += 10; // Additional happiness decrease if not bedtime and light is off
+            happinessCost += 10 // Additional happiness decrease if not bedtime and light is off
           }
 
           // Adjust stats if it is bedtime and the light is off
           if (state.isBedtime && !state.isLightOn) {
-            hungerCost = 5;
-            energyCost = -5;
-            thirstCost = 5;
-            healthCost = -5;
-            happinessCost = -5;
+            hungerCost = 5
+            energyCost = -5
+            thirstCost = 5
+            healthCost = -5
+            happinessCost = -5
           }
 
           if (state.isSick && state.sickSince) {
             const timeSinceSick =
-              new Date().getTime() - new Date(state.sickSince).getTime();
+              new Date().getTime() - new Date(state.sickSince).getTime()
             if (timeSinceSick > state.sickDuration) {
-              healthCost = 5;
+              healthCost = 5
             }
           }
 
@@ -231,9 +231,9 @@ const usePetStore = create<PetState>()(
               100,
               state.hunger >= 90 || state.happiness <= 20 || state.thirst >= 90
                 ? state.health - healthCost
-                : state.health
-            )
-          );
+                : state.health,
+            ),
+          )
 
           const shouldGetSick =
             !state.isSick &&
@@ -242,22 +242,19 @@ const usePetStore = create<PetState>()(
               state.happiness <= 30 ||
               state.energy <= 20 ||
               state.thirst >= 80) &&
-            Math.random() < 0.3;
+            Math.random() < 0.3
 
           const newAge = state.birthDate
             ? Math.floor(
                 (new Date().setHours(0, 0, 0, 0) -
                   new Date(state.birthDate).setHours(0, 0, 0, 0)) /
-                  (1000 * 60 * 60 * 24)
+                  (1000 * 60 * 60 * 24),
               )
-            : state.age;
+            : state.age
 
           return {
             hunger: Math.min(Math.max(state.hunger + hungerCost, 0), 100),
-            happiness: Math.min(
-              Math.max(state.happiness - happinessCost, 0),
-              100
-            ),
+            happiness: Math.min(Math.max(state.happiness - happinessCost, 0), 100),
             energy: Math.min(Math.max(state.energy - energyCost, 0), 100),
             thirst: Math.min(Math.max(state.thirst + thirstCost, 0), 100),
             health: newHealth,
@@ -270,19 +267,19 @@ const usePetStore = create<PetState>()(
             sickDuration: state.isSick || shouldGetSick ? 60000 : 0,
             age: newAge,
             discipline: newDiscipline,
-          };
+          }
         }),
 
       gainExperience: (amount) =>
         set((state) => {
-          const newExperience = state.experience + amount;
+          const newExperience = state.experience + amount
           if (newExperience >= 100) {
             return {
               level: state.level + 1,
               experience: newExperience - 100,
-            };
+            }
           }
-          return { experience: newExperience };
+          return { experience: newExperience }
         }),
 
       reset: () =>
@@ -332,40 +329,34 @@ const usePetStore = create<PetState>()(
        */
       study: () =>
         set((state) => {
-          const HAPPINESS_COST = 5; // Happiness decrease per study session
-          const ENERGY_COST = 10; // Energy decrease per study session
+          const HAPPINESS_COST = 5 // Happiness decrease per study session
+          const ENERGY_COST = 10 // Energy decrease per study session
 
           // Get the current and next discipline index
-          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline);
-          const nextIndex = Math.min(
-            currentIndex + 1,
-            DISCIPLINE_ORDER.length - 1
-          );
+          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline)
+          const nextIndex = Math.min(currentIndex + 1, DISCIPLINE_ORDER.length - 1)
 
           // Update state with new discipline, happiness, and energy
           return {
             discipline: DISCIPLINE_ORDER[nextIndex],
             happiness: Math.max(0, state.happiness - HAPPINESS_COST),
             energy: Math.max(0, state.energy - ENERGY_COST),
-          };
+          }
         }),
 
       disciplineAction: () =>
         set((state) => {
-          const HAPPINESS_GAIN = 5; // Happiness increase per discipline action
+          const HAPPINESS_GAIN = 5 // Happiness increase per discipline action
 
           // Get the current and next discipline index
-          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline);
-          const nextIndex = Math.min(
-            currentIndex + 1,
-            DISCIPLINE_ORDER.length - 1
-          );
+          const currentIndex = DISCIPLINE_ORDER.indexOf(state.discipline)
+          const nextIndex = Math.min(currentIndex + 1, DISCIPLINE_ORDER.length - 1)
 
           // Update state with new discipline and happiness
           return {
             discipline: DISCIPLINE_ORDER[nextIndex],
             happiness: Math.min(100, state.happiness + HAPPINESS_GAIN),
-          };
+          }
         }),
 
       toggleLight: () =>
@@ -375,33 +366,33 @@ const usePetStore = create<PetState>()(
 
       updateStatsTemp: () =>
         set((state) => {
-          const temperatureChange = state.isAirConditionerOn ? -1 : 1;
+          const temperatureChange = state.isAirConditionerOn ? -1 : 1
           const newTemperature = Math.max(
             18,
-            Math.min(35, state.ambientTemperature + temperatureChange)
-          );
+            Math.min(35, state.ambientTemperature + temperatureChange),
+          )
 
-          const isCold = newTemperature === 18;
-          const isHot = newTemperature === 35;
+          const isCold = newTemperature === 18
+          const isHot = newTemperature === 35
 
           return {
             ambientTemperature: newTemperature,
             isCold,
             isHot,
-          };
+          }
         }),
 
       updateBedtime: () =>
         set(() => {
-          const currentHour = new Date().getHours();
-          const isBedtime = currentHour >= 20 || currentHour < 8;
-          return { isBedtime };
+          const currentHour = new Date().getHours()
+          const isBedtime = currentHour >= 20 || currentHour < 8
+          return { isBedtime }
         }),
     }),
     {
       name: "pet-storage",
-    }
-  )
-);
+    },
+  ),
+)
 
-export default usePetStore;
+export default usePetStore
