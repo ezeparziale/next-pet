@@ -26,6 +26,7 @@ interface PetState {
   discipline: string
   isLightOn: boolean
   isBedtime: boolean
+  isSoundEnabled: boolean
   feedHamburger: () => void
   feedApple: () => void
   feedIceCream: () => void
@@ -47,6 +48,7 @@ interface PetState {
   toggleLight: () => void
   updateStatsTemp: () => void
   updateBedtime: () => void
+  setIsSoundEnabled: (enabled: boolean) => void
 }
 
 const DISCIPLINE_ORDER = ["F", "E", "D", "C", "B", "B+", "A", "A+"]
@@ -78,6 +80,7 @@ const usePetStore = create<PetState>()(
       discipline: "E",
       isLightOn: true,
       isBedtime: false,
+      isSoundEnabled: true,
 
       feedHamburger: () =>
         set((state) => {
@@ -388,6 +391,11 @@ const usePetStore = create<PetState>()(
           const isBedtime = currentHour >= 20 || currentHour < 8
           return { isBedtime }
         }),
+
+      setIsSoundEnabled: (enabled: boolean) =>
+        set(() => ({
+          isSoundEnabled: enabled,
+        })),
     }),
     {
       name: "pet-storage",

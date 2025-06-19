@@ -1,9 +1,10 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import usePetStore from "@/stores/pet-store"
-import { Pencil } from "lucide-react" // Import BookOpen icon
+import { Pencil } from "lucide-react"
 
+import { SOUNDS } from "@/lib/sounds"
 import { SPRITES } from "@/lib/sprites"
 import { Progress } from "@/components/ui/progress"
 
@@ -66,6 +67,71 @@ export default function Pet() {
   const [newName, setNewName] = useState(name)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isInAction, setIsInAction] = useState(false)
+  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
+
+  const [prevIsDirty, setPrevIsDirty] = useState(isDirty)
+  const [prevIsSick, setPrevIsSick] = useState(isSick)
+  const [prevIsHot, setPrevIsHot] = useState(isHot)
+  const [prevIsCold, setPrevIsCold] = useState(isCold)
+  const [prevHunger, setPrevHunger] = useState(hunger)
+  const [prevThirst, setPrevThirst] = useState(thirst)
+
+  const playSound = useCallback(
+    (sound: keyof typeof SOUNDS) => {
+      if (!isSoundEnabled) return
+
+      const AudioCtx =
+        window.AudioContext ||
+        (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+      if (!AudioCtx) return
+
+      if (sound === "birth") {
+        const sequence = SOUNDS.birth as Array<{
+          freq: number
+          duration: number
+          type: OscillatorType
+        }>
+        let ctx: AudioContext | null = null
+        let time = 0
+        sequence.forEach(({ freq, duration, type }, idx) => {
+          setTimeout(() => {
+            ctx = new AudioCtx()
+            const o = ctx.createOscillator()
+            const g = ctx.createGain()
+            o.type = type
+            o.frequency.value = freq
+            o.connect(g)
+            g.connect(ctx!.destination)
+            g.gain.value = 0.15
+            o.start()
+            o.stop(ctx!.currentTime + duration)
+            o.onended = () => ctx && ctx.close()
+          }, time * 1000)
+          time += duration
+        })
+        return
+      }
+
+      const s = SOUNDS[sound] as {
+        freq: number
+        duration: number
+        type: OscillatorType
+      }
+      const ctx = new AudioCtx()
+      const o = ctx.createOscillator()
+      const g = ctx.createGain()
+      const { freq, duration, type } = s
+      o.type = type
+      o.frequency.value = freq
+      o.connect(g)
+      g.connect(ctx.destination)
+      g.gain.value = 0.15
+      o.start()
+      o.stop(ctx.currentTime + duration)
+      o.onended = () => ctx.close()
+    },
+    [isSoundEnabled],
+  )
 
   const updatePetState = useCallback(() => {
     if (isDead) {
@@ -134,10 +200,12 @@ export default function Pet() {
 
   useEffect(() => {
     setIsMounted(true)
-    setTimeout(() => {
+    const birthTimeout = setTimeout(() => {
       setPetState("baby_1")
+      playSound("birth")
     }, 23000)
-  }, [])
+    return () => clearTimeout(birthTimeout)
+  }, [playSound])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -174,18 +242,37 @@ export default function Pet() {
     setIsEditingName(false)
   }
 
+  const PET_STATE_SOUNDS = useMemo<
+    Partial<Record<PetStates, keyof typeof SOUNDS>>
+  >(() => {
+    const mapping: Partial<Record<PetStates, keyof typeof SOUNDS>> = {}
+    Object.keys(SOUNDS).forEach((sound) => {
+      mapping[sound as PetStates] = sound as keyof typeof SOUNDS
+    })
+    return mapping
+  }, [])
+
+  const setPetStateWithSound = useCallback(
+    (state: PetStates) => {
+      setPetState(state)
+      const sound = PET_STATE_SOUNDS[state]
+      if (sound) playSound(sound)
+    },
+    [PET_STATE_SOUNDS, playSound],
+  )
+
   const handleFeedHamburger = () => {
     setIsInAction(true)
     setFrame(0)
     if (hunger === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedHamburger()
-      setPetState("eating_hamburger")
+      setPetStateWithSound("eating_hamburger")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -201,14 +288,14 @@ export default function Pet() {
     setIsInAction(true)
     setFrame(0)
     if (hunger === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedCarrot()
-      setPetState("eating_carrot")
+      setPetStateWithSound("eating_carrot")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -224,14 +311,14 @@ export default function Pet() {
     setIsInAction(true)
     setFrame(0)
     if (hunger === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedChickenLeg()
-      setPetState("eating_chicken_leg")
+      setPetStateWithSound("eating_chicken_leg")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -247,7 +334,7 @@ export default function Pet() {
     setIsInAction(true)
     if (isSick) {
       setFrame(0)
-      setPetState("give_medicine")
+      setPetStateWithSound("give_medicine")
       setTimeout(() => {
         giveMedicine()
         if (isDirty) {
@@ -259,7 +346,7 @@ export default function Pet() {
       }, 3000)
     } else {
       setFrame(0)
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -275,7 +362,7 @@ export default function Pet() {
     setIsInAction(true)
     feedIceCream()
     setFrame(0)
-    setPetState("eating_ice_cream")
+    setPetStateWithSound("eating_ice_cream")
     setTimeout(() => {
       if (isDirty) {
         setPetState("baby_dirty")
@@ -290,14 +377,14 @@ export default function Pet() {
     setIsInAction(true)
     setFrame(0)
     if (hunger === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedNoodle()
-      setPetState("eating_noodle")
+      setPetStateWithSound("eating_noodle")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -313,14 +400,14 @@ export default function Pet() {
     setIsInAction(true)
     setFrame(0)
     if (thirst === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedWater()
-      setPetState("drinking_water")
+      setPetStateWithSound("drinking_water")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -336,14 +423,14 @@ export default function Pet() {
     setIsInAction(true)
     setFrame(0)
     if (hunger === 0) {
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
       }, 3000)
     } else {
       feedApple()
-      setPetState("eating_apple")
+      setPetStateWithSound("eating_apple")
       setTimeout(() => {
         if (isDirty) {
           setPetState("baby_dirty")
@@ -359,7 +446,7 @@ export default function Pet() {
     setIsInAction(true)
     if (isDirty) {
       setFrame(0)
-      setPetState("baby_shower")
+      setPetStateWithSound("baby_shower")
       setTimeout(() => {
         clean()
         setPetState("baby_1")
@@ -367,7 +454,7 @@ export default function Pet() {
       }, 7000)
     } else {
       setFrame(0)
-      setPetState("no")
+      setPetStateWithSound("no")
       setTimeout(() => {
         setPetState("baby_1")
         setIsInAction(false)
@@ -390,7 +477,7 @@ export default function Pet() {
     setIsInAction(true)
     study()
     setFrame(0)
-    setPetState("studying")
+    setPetStateWithSound("studying")
     setTimeout(() => {
       setPetState("baby_1")
       setIsInAction(false)
@@ -401,21 +488,81 @@ export default function Pet() {
     setIsInAction(true)
     disciplineAction()
     setFrame(0)
-    setPetState("discipline")
+    setPetStateWithSound("discipline")
     setTimeout(() => {
       setPetState("baby_1")
       setIsInAction(false)
     }, 1000)
   }
 
+  const handlePlay = () => {
+    setIsInAction(true)
+    play()
+    setFrame(0)
+    playSound("play")
+    setTimeout(() => {
+      setPetState("baby_1")
+      setIsInAction(false)
+    }, 2000)
+  }
+
+  const handleRest = () => {
+    setIsInAction(true)
+    rest()
+    setFrame(0)
+    playSound("rest")
+    setTimeout(() => {
+      setPetState("baby_1")
+      setIsInAction(false)
+    }, 2000)
+  }
+
   const handleAirConditioner = () => {
     setIsInAction(true)
     toggleAirConditioner()
     setFrame(0)
+    playSound("toggle_air_conditioner")
     updateStatsTemp()
     updatePetState()
     setIsInAction(false)
   }
+
+  const handleToggleLight = () => {
+    toggleLight()
+    playSound("toggle_light")
+  }
+
+  useEffect(() => {
+    if (!isDead) {
+      if (!prevIsDirty && isDirty) playSound("alert")
+      if (!prevIsSick && isSick) playSound("alert")
+      if (!prevIsHot && isHot) playSound("alert")
+      if (!prevIsCold && isCold) playSound("alert")
+      if (prevHunger > 20 && hunger <= 20) playSound("alert")
+      if (prevThirst > 20 && thirst <= 20) playSound("alert")
+    }
+    setPrevIsDirty(isDirty)
+    setPrevIsSick(isSick)
+    setPrevIsHot(isHot)
+    setPrevIsCold(isCold)
+    setPrevHunger(hunger)
+    setPrevThirst(thirst)
+  }, [
+    isDirty,
+    isSick,
+    isHot,
+    isCold,
+    hunger,
+    thirst,
+    prevIsDirty,
+    prevIsSick,
+    prevIsHot,
+    prevIsCold,
+    prevHunger,
+    prevThirst,
+    isDead,
+    playSound,
+  ])
 
   if (!isMounted) return <PetSkeleton />
 
@@ -567,10 +714,10 @@ export default function Pet() {
         <Button onClick={handleFeedWater} disabled={isDead || isInAction}>
           💧
         </Button>
-        <Button onClick={play} disabled={isDead || isInAction}>
+        <Button onClick={handlePlay} disabled={isDead || isInAction}>
           ⚽
         </Button>
-        <Button onClick={rest} disabled={isDead || isInAction}>
+        <Button onClick={handleRest} disabled={isDead || isInAction}>
           🛌
         </Button>
         <Button onClick={handleMedicine} disabled={isDead || isInAction}>
@@ -588,8 +735,14 @@ export default function Pet() {
         <Button onClick={handleDiscipline} disabled={isDead || isInAction}>
           💗
         </Button>
-        <Button onClick={toggleLight} disabled={isDead || isInAction}>
+        <Button onClick={handleToggleLight} disabled={isDead || isInAction}>
           💡
+        </Button>
+        <Button
+          onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+          disabled={isDead || isInAction}
+        >
+          {isSoundEnabled ? "🔊" : "🔇"}
         </Button>
         {isDead && <Button onClick={handleReset}>🔄</Button>}
       </div>
