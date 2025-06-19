@@ -404,7 +404,7 @@ const usePetStore = create<PetState>()(
           isSoundEnabled: enabled,
         })),
 
-      setPetState: (state: string) => set({ petState: state }),
+      setPetState: (state: SpriteState) => set({ petState: state }),
     }),
     {
       name: "pet-storage",
