@@ -88,14 +88,14 @@ export default function Pet() {
       if (!AudioCtx) return
 
       if (sound === "birth") {
-        const sequence = SOUNDS.birth as Array<{
+        const sequence = SOUNDS.birth as readonly {
           freq: number
           duration: number
           type: OscillatorType
-        }>
+        }[]
         let ctx: AudioContext | null = null
         let time = 0
-        sequence.forEach(({ freq, duration, type }, idx) => {
+        sequence.forEach(({ freq, duration, type }) => {
           setTimeout(() => {
             ctx = new AudioCtx()
             const o = ctx.createOscillator()
