@@ -148,6 +148,8 @@ export default function Pet() {
       setPetState("angry")
     } else if (isDirty && petState != "baby_shower") {
       setPetState("baby_dirty")
+    } else if (petState === "playing") {
+      setPetState("playing")
     }
   }, [isDead, isBedtime, isSick, petState, isCold, isHot, isDirty, setPetState])
 
@@ -170,6 +172,7 @@ export default function Pet() {
       "studying",
       "discipline",
       "sleeping",
+      "playing",
     ]
 
     const isStateExcluded = excludedStates.includes(petState)
@@ -506,11 +509,11 @@ export default function Pet() {
     setIsInAction(true)
     play()
     setFrame(0)
-    playSound("play")
+    setPetStateWithSound("playing")
     setTimeout(() => {
       setPetState("baby_1")
       setIsInAction(false)
-    }, 2000)
+    }, 5000)
   }
 
   const handleRest = () => {

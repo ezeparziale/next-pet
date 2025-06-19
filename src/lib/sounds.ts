@@ -12,7 +12,7 @@ export const SOUNDS = {
   discipline: { freq: 392, duration: 0.09, type: "square" }, // G4
   studying: { freq: 784, duration: 0.13, type: "triangle" }, // G5
   sleeping_action: { freq: 262, duration: 0.15, type: "triangle" }, // C4
-  play: { freq: 880, duration: 0.12, type: "triangle" }, // A5
+  playing: { freq: 880, duration: 0.12, type: "triangle" }, // A5
   rest: { freq: 330, duration: 0.15, type: "triangle" }, // E4
   reset: { freq: 130, duration: 0.2, type: "sawtooth" }, // C3
   clean: { freq: 370, duration: 0.08, type: "triangle" }, // F#4
