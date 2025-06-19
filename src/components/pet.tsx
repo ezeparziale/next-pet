@@ -201,7 +201,6 @@ export default function Pet() {
   }, [])
 
   useEffect(() => {
-    setIsMounted(true)
     if (petState === "egg") {
       const birthTimeout = setTimeout(() => {
         setPetState("baby_1")
@@ -209,7 +208,11 @@ export default function Pet() {
       }, 23000)
       return () => clearTimeout(birthTimeout)
     }
-  }, [playSound, petState, setPetState])
+    if (!isMounted && (petState as string) !== "egg") {
+      setPetState("baby_1")
+    }
+    setIsMounted(true)
+  }, [playSound, petState, setPetState, isMounted])
 
   useEffect(() => {
     const interval = setInterval(() => {
