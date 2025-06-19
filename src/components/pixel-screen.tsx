@@ -1,6 +1,6 @@
 import { SPRITES } from "@/lib/sprites"
 
-type SpriteState = keyof typeof SPRITES
+export type SpriteState = keyof typeof SPRITES
 
 export const PixelScreen = ({
   state,

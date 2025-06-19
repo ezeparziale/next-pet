@@ -1,6 +1,8 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
+import { SpriteState } from "@/components/pixel-screen"
+
 interface PetState {
   name: string
   hunger: number
@@ -27,7 +29,7 @@ interface PetState {
   isLightOn: boolean
   isBedtime: boolean
   isSoundEnabled: boolean
-  petState: string
+  petState: SpriteState
   feedHamburger: () => void
   feedApple: () => void
   feedIceCream: () => void
@@ -50,7 +52,7 @@ interface PetState {
   updateStatsTemp: () => void
   updateBedtime: () => void
   setIsSoundEnabled: (enabled: boolean) => void
-  setPetState: (state: string) => void
+  setPetState: (state: SpriteState) => void
 }
 
 const DISCIPLINE_ORDER = ["F", "E", "D", "C", "B", "B+", "A", "A+"]
@@ -314,6 +316,8 @@ const usePetStore = create<PetState>()(
           discipline: "E",
           isLightOn: true,
           isBedtime: false,
+          isSoundEnabled: true,
+          petState: "egg",
         })),
 
       setName: (name: string) => set({ name }),

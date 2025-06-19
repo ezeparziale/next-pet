@@ -176,7 +176,7 @@ export default function Pet() {
     if (!isHot && !isCold && !isDirty && !isSick && !isDead && !isStateExcluded) {
       setPetState("baby_1")
     }
-  }, [isHot, isCold, isDirty, isSick, isDead, petState])
+  }, [isHot, isCold, isDirty, isSick, isDead, petState, setPetState])
 
   // Decrease stats every 5 seconds
   useEffect(() => {
@@ -261,7 +261,7 @@ export default function Pet() {
       const sound = PET_STATE_SOUNDS[state]
       if (sound) playSound(sound)
     },
-    [PET_STATE_SOUNDS, playSound],
+    [PET_STATE_SOUNDS, playSound, setPetState],
   )
 
   const handleFeedHamburger = () => {
