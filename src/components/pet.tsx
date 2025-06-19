@@ -58,9 +58,10 @@ export default function Pet() {
     updateStatsTemp,
     isBedtime,
     updateBedtime,
+    petState,
+    setPetState,
   } = usePetStore()
 
-  const [petState, setPetState] = useState<PetStates>("egg")
   const [frame, setFrame] = useState(0)
   const [isMounted, setIsMounted] = useState(false)
   const [isEditingName, setIsEditingName] = useState(false)
@@ -147,7 +148,7 @@ export default function Pet() {
     } else if (isDirty && petState != "baby_shower") {
       setPetState("baby_dirty")
     }
-  }, [isDead, isSick, petState, isCold, isHot, isDirty, isBedtime])
+  }, [isDead, isBedtime, isSick, petState, isCold, isHot, isDirty, setPetState])
 
   useEffect(() => {
     updatePetState()
@@ -200,12 +201,14 @@ export default function Pet() {
 
   useEffect(() => {
     setIsMounted(true)
-    const birthTimeout = setTimeout(() => {
-      setPetState("baby_1")
-      playSound("birth")
-    }, 23000)
-    return () => clearTimeout(birthTimeout)
-  }, [playSound])
+    if (petState === "egg") {
+      const birthTimeout = setTimeout(() => {
+        setPetState("baby_1")
+        playSound("birth")
+      }, 23000)
+      return () => clearTimeout(birthTimeout)
+    }
+  }, [playSound, petState, setPetState])
 
   useEffect(() => {
     const interval = setInterval(() => {
