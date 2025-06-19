@@ -60,6 +60,8 @@ export default function Pet() {
     updateBedtime,
     petState,
     setPetState,
+    isSoundEnabled,
+    setIsSoundEnabled,
   } = usePetStore()
 
   const [frame, setFrame] = useState(0)
@@ -68,7 +70,6 @@ export default function Pet() {
   const [newName, setNewName] = useState(name)
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isInAction, setIsInAction] = useState(false)
-  const [isSoundEnabled, setIsSoundEnabled] = useState(true)
 
   const [prevIsDirty, setPrevIsDirty] = useState(isDirty)
   const [prevIsSick, setPrevIsSick] = useState(isSick)
@@ -535,6 +536,11 @@ export default function Pet() {
     playSound("toggle_light")
   }
 
+  const handleToggleSound = () => {
+    setIsSoundEnabled(!isSoundEnabled)
+    playSound("toggle_sound")
+  }
+
   useEffect(() => {
     if (!isDead) {
       if (!prevIsDirty && isDirty) playSound("alert")
@@ -741,10 +747,7 @@ export default function Pet() {
         <Button onClick={handleToggleLight} disabled={isDead || isInAction}>
           💡
         </Button>
-        <Button
-          onClick={() => setIsSoundEnabled(!isSoundEnabled)}
-          disabled={isDead || isInAction}
-        >
+        <Button onClick={handleToggleSound} disabled={isDead || isInAction}>
           {isSoundEnabled ? "🔊" : "🔇"}
         </Button>
         {isDead && <Button onClick={handleReset}>🔄</Button>}

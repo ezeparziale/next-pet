@@ -26,6 +26,7 @@ export const SOUNDS = {
     { freq: 1047, duration: 0.3, type: "triangle" }, // C6
     { freq: 1319, duration: 0.3, type: "triangle" }, // E6
   ],
+  toggle_sound: { freq: 350, duration: 0.12, type: "triangle" },
 } as const
 
 export type SoundType = keyof typeof SOUNDS
