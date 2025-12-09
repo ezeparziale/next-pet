@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import usePetStore from "@/stores/pet-store"
 import { Pencil } from "lucide-react"
 
@@ -71,12 +71,14 @@ export default function Pet() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [isInAction, setIsInAction] = useState(false)
 
-  const [prevIsDirty, setPrevIsDirty] = useState(isDirty)
-  const [prevIsSick, setPrevIsSick] = useState(isSick)
-  const [prevIsHot, setPrevIsHot] = useState(isHot)
-  const [prevIsCold, setPrevIsCold] = useState(isCold)
-  const [prevHunger, setPrevHunger] = useState(hunger)
-  const [prevThirst, setPrevThirst] = useState(thirst)
+  const prevStatsRef = useRef({
+    isDirty,
+    isSick,
+    isHot,
+    isCold,
+    hunger,
+    thirst,
+  })
 
   const playSound = useCallback(
     (sound: keyof typeof SOUNDS) => {
@@ -204,6 +206,14 @@ export default function Pet() {
   }, [])
 
   useEffect(() => {
+    setIsMounted(true)
+    if (petState !== "egg") {
+      setPetState("baby_1")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
     if (petState === "egg") {
       const birthTimeout = setTimeout(() => {
         setPetState("baby_1")
@@ -211,11 +221,7 @@ export default function Pet() {
       }, 23000)
       return () => clearTimeout(birthTimeout)
     }
-    if (!isMounted && (petState as string) !== "egg") {
-      setPetState("baby_1")
-    }
-    setIsMounted(true)
-  }, [playSound, petState, setPetState, isMounted])
+  }, [petState, playSound, setPetState])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -549,35 +555,23 @@ export default function Pet() {
 
   useEffect(() => {
     if (!isDead) {
-      if (!prevIsDirty && isDirty) playSound("alert")
-      if (!prevIsSick && isSick) playSound("alert")
-      if (!prevIsHot && isHot) playSound("alert")
-      if (!prevIsCold && isCold) playSound("alert")
-      if (prevHunger > 20 && hunger <= 20) playSound("alert")
-      if (prevThirst > 20 && thirst <= 20) playSound("alert")
+      if (!prevStatsRef.current.isDirty && isDirty) playSound("alert")
+      if (!prevStatsRef.current.isSick && isSick) playSound("alert")
+      if (!prevStatsRef.current.isHot && isHot) playSound("alert")
+      if (!prevStatsRef.current.isCold && isCold) playSound("alert")
+      if (prevStatsRef.current.hunger > 20 && hunger <= 20) playSound("alert")
+      if (prevStatsRef.current.thirst > 20 && thirst <= 20) playSound("alert")
     }
-    setPrevIsDirty(isDirty)
-    setPrevIsSick(isSick)
-    setPrevIsHot(isHot)
-    setPrevIsCold(isCold)
-    setPrevHunger(hunger)
-    setPrevThirst(thirst)
-  }, [
-    isDirty,
-    isSick,
-    isHot,
-    isCold,
-    hunger,
-    thirst,
-    prevIsDirty,
-    prevIsSick,
-    prevIsHot,
-    prevIsCold,
-    prevHunger,
-    prevThirst,
-    isDead,
-    playSound,
-  ])
+
+    prevStatsRef.current = {
+      isDirty,
+      isSick,
+      isHot,
+      isCold,
+      hunger,
+      thirst,
+    }
+  }, [isDirty, isSick, isHot, isCold, hunger, thirst, isDead, playSound])
 
   if (!isMounted) return <PetSkeleton />
 
